@@ -1,2 +1,4 @@
 tritonclient
 tritonclient[http]
+# Package working with images
+pillow
