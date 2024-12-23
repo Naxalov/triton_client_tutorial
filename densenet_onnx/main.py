@@ -1,5 +1,6 @@
 import numpy as np
 import tritonclient.http as httpclient
+from PIL import Image
 # URL='192.168.0.81:8000'
 
 # Define the server URL
@@ -17,19 +18,29 @@ if not client.is_server_live():
 metadata = client.get_model_metadata(MODEL_NAME)
 print(metadata)
 
-# Generate dummy input data (1 sample, 3 channels, 224x224 image)
-input_shape = (1, 3, 224, 224)  # Batch size 1, RGB image
-input_data = np.random.rand(*input_shape).astype(np.float32)
+# Read from the image file
+image_path = 'car.jpg'
+input_shape = (1, 3, 224, 224)
+# Load the image
+image = Image.open(image_path).convert("RGB")
+# Resize the image to the desired input shape
+image = image.resize((input_shape[2], input_shape[3]))
+# Convert the image to a numpy array
+image = np.array(image).astype(np.float32)
+# Transpose the image to the correct format
+image = image.transpose(2, 0, 1)
+# Add a batch dimension
+image = np.expand_dims(image, axis=0)
 
 # Preprocess input (e.g., normalization, if needed)
 # Assuming standard normalization for images: [0, 1] range
-input_data /= 255.0
+image /= 255.0
 
 # Define Triton input
 inputs = [
     httpclient.InferInput(name="data_0", shape=input_shape, datatype="FP32")
 ]
-inputs[0].set_data_from_numpy(input_data)
+inputs[0].set_data_from_numpy(image)
 
 # Define Triton output
 outputs = [
