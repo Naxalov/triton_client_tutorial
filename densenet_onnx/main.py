@@ -4,7 +4,7 @@ from PIL import Image
 # URL='192.168.0.81:8000'
 
 # Define the server URL
-TRITON_SERVER_URL = "192.168.0.81:8000"  # Change to your Triton server address if different
+TRITON_SERVER_URL = "192.168.0.66:8000"  # Change to your Triton server address if different
 MODEL_NAME = "densenet_onnx"
 
 # Create a Triton client
@@ -20,17 +20,17 @@ print(metadata)
 
 # Read from the image file
 image_path = 'car.jpg'
-input_shape = (1, 3, 224, 224)
+input_shape = (3, 224, 224)
 # Load the image
 image = Image.open(image_path).convert("RGB")
 # Resize the image to the desired input shape
-image = image.resize((input_shape[2], input_shape[3]))
+image = image.resize((input_shape[1], input_shape[2]))
 # Convert the image to a numpy array
 image = np.array(image).astype(np.float32)
 # Transpose the image to the correct format
 image = image.transpose(2, 0, 1)
 # Add a batch dimension
-image = np.expand_dims(image, axis=0)
+# image = np.expand_dims(image, axis=0)
 
 # Preprocess input (e.g., normalization, if needed)
 # Assuming standard normalization for images: [0, 1] range
