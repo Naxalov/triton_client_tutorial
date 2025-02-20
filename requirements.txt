@@ -1,4 +1,8 @@
 tritonclient
 tritonclient[http]
+tritonclient[grpc]
 # Package working with images
 pillow
+# OpenCV for image processing and video capture
+opencv-python>=4.10.0
+opencv-contrib-python>=4.10.0
